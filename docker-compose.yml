@@ -1,0 +1,29 @@
+---
+
+version: "3.7"
+
+services:
+  memcached:
+    hostname: mem001
+    container_name: mem001
+    build:
+      context: ./memcached
+      dockerfile: Dockerfile
+    environment:
+      TZ: "Asia/Tokyo"
+    command: ["-p", "11211", "-U", "0", "-m", "128MB", "-c", "65535"]
+    sysctls:
+      net.core.somaxconn: 8192
+      net.ipv4.ip_local_port_range: "10000 60999"
+
+  client:
+    hostname: client001
+    container_name: client001
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+    - ./client/tools:/usr/local/tools
+    environment:
+      TZ: "Asia/Tokyo"
