@@ -1,0 +1,1 @@
+$memd->flush_all;
