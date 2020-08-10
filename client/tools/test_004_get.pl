@@ -5,6 +5,7 @@ use warnings;
 
 use Cache::Memcached::Fast;
 use String::Random;
+use Data::Dumper;
 
 my $debug = 0;
 
@@ -33,32 +34,15 @@ sub init_memd {
 }
 
 sub main {
-	my $cpu_num = qx(grep -c processor /proc/cpuinfo);
-	chomp($cpu_num);
-	for (my $j = 0; $j < $cpu_num; $j++) {
-		my $pid = fork();
-		if ($pid) {
-			print "P:[$$] parent proc\n" if $debug;
-			wait;
-		} elsif ($pid == 0) {
-			print "C:[$$] child prorc\n" if $debug;
-			my $memd = init_memd();
-			my $i = 0;
-			my $sr = String::Random->new();
-			while ($i < 2) {
-				# ランダムな長さのvalueを登録
-				my $value = $sr->randregex('.{8,32}');
-				my $keys = "key::" . $i . "::" . $$;
-				$memd->set("$keys", "$value", 60 - $i);
-				$i++;
-				my $g_value = $memd->get($keys);
-				print "keys->$keys value->$g_value\n" if $debug;
-			}
-			exit();
-		}
+	my @args = @_;
+	my $memd = init_memd();
+
+	my $versions = $memd->server_versions;
+	while (my ($server, $version) = each %$versions) {
+		print "$server: $version\n";
 	}
 }
 
-main();
+main(@ARGV);
 
 1;
