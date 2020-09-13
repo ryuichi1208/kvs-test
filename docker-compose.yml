@@ -2,10 +2,7 @@
 
 version: "3.7"
 
-services:
-  memcached:
-    hostname: mem001
-    container_name: mem001
+x-memcache: &memcached
     build:
       context: ./memcached
       dockerfile: Dockerfile
@@ -15,6 +12,22 @@ services:
     sysctls:
       net.core.somaxconn: 8192
       net.ipv4.ip_local_port_range: "10000 60999"
+
+services:
+  memcached01:
+    hostname: mem001
+    container_name: mem001
+    <<: *memcached
+
+  memcached02:
+    hostname: mem002
+    container_name: mem002
+    <<: *memcached
+
+  memcached03:
+    hostname: mem003
+    container_name: mem003
+    <<: *memcached
 
   client:
     hostname: client001

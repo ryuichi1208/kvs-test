@@ -2,7 +2,7 @@ use Cache::Memcached::Fast;
 use String::Random;
 
 my $memd = new Cache::Memcached::Fast({
-	servers => [ { address => 'mem001:11211', weight => 2.5 },],
+	servers => [ { address => 'mem001:11211'},{ address => 'mem002:11211'}],
 	namespace => 'test::',
 	connect_timeout => 0.2,
 	io_timeout => 0.5,

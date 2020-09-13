@@ -10,7 +10,7 @@ my $debug = 0;
 
 sub init_memd {
 	my $memd = new Cache::Memcached::Fast({
-		servers => [ { address => 'mem001:11211', weight => 2.5 },],
+			servers => [ { address => 'mem001:11211'}, {address => 'mem002:11211'}],
 		namespace => 'test::',
 		connect_timeout => 0.2,
 		io_timeout => 0.5,
@@ -45,7 +45,7 @@ sub main {
 			my $memd = init_memd();
 			my $i = 0;
 			my $sr = String::Random->new();
-			while ($i < 2) {
+			while ($i < 10) {
 				# ランダムな長さのvalueを登録
 				my $value = $sr->randregex('.{8,32}');
 				my $keys = "key::" . $i . "::" . $$;
