@@ -2,21 +2,22 @@
 use strict;
 use warnings;
 use Cache::Memcached::Fast;
+use Data::Dumper;
+
+my @_SERVERS = [{address => 'mem001:11211'},
+		{address => 'mem002:11211'},
+		{address => 'mem003:11211'},
+		{address => 'mem004:11211'}
+	];
 
 my $memd = Cache::Memcached::Fast->new({
-    servers => [ { address => 'localhost:11211' }],
-}); 
+	servers => @_SERVERS,
+	ketama_points => 150,
+	max_failures => 1,
+	failure_timeout => 1
+});
 
-# 値を追加 key => value
-$memd->add('id' => 'koba04');
-$memd->add('age' => 28);
-
-# 値を取得
-my $id = $memd->get('id');
-my $age = $memd->get('age');
-
-# 値を設定
-$memd->set('age' => 57);
-
-# 値を変更
-$memd->replace('age' => 28);
+my $loop = 30;
+for (my $i = 0; $i < $loop; $i++) {
+	$memd->add("$i" => $i);
+}

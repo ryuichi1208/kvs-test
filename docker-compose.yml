@@ -14,6 +14,18 @@ x-memcache: &memcached
       net.ipv4.ip_local_port_range: "10000 60999"
 
 services:
+  client:
+    hostname: client001
+    container_name: client001
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+    - ./client/tools:/usr/local/tools
+    environment:
+      TZ: "Asia/Tokyo"
+
   memcached01:
     hostname: mem001
     container_name: mem001
@@ -29,14 +41,7 @@ services:
     container_name: mem003
     <<: *memcached
 
-  client:
-    hostname: client001
-    container_name: client001
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    tty: true
-    volumes:
-    - ./client/tools:/usr/local/tools
-    environment:
-      TZ: "Asia/Tokyo"
+  memcached04:
+    hostname: mem004
+    container_name: mem004
+    <<: *memcached
