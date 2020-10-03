@@ -14,4 +14,5 @@ RUN apk --no-cache add \
 	perl-dev \
 	wget \
 	&& cpanm String::Random \
-	&& cpanm Cache::Memcached::Fast
+	&& cpanm Cache::Memcached::Fast \
+	&& cpanm Cache::Memcached

@@ -1,6 +1,35 @@
 ---
 
-version: '3.8'
 services:
-  redis:
+  client:
+    hostname: client001
+    container_name: client001
+    build:
+      context: ./cli
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+    - ./cli/tools:/usr/local/tools
+    environment:
+      TZ: "Asia/Tokyo"
 
+  redis001:
+    hostname: redis001
+    container_name: redis001
+    build:
+      context: ./redis
+      dockerfile: Dockerfile
+    environment:
+      TZ: "Asia/Tokyo"
+    sysctls:
+      net.core.somaxconn: 8192
+      net.ipv4.ip_local_port_range: "10000 60999"
+
+  redis-insight:
+    hostname: redis-insight
+    container_name: redis-insight
+    build:
+      context: ./redis-insight
+      dockerfile: Dockerfile
+    ports:
+      - 8001:8001
